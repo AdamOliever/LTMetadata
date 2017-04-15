@@ -2,15 +2,16 @@
 //  LTPhotoController.m
 //  LTMetadataEditor
 //
-//  Created by 苗盼盼 on 17/4/15.
+//  Created by adam on 17/4/15.
 //  Copyright © 2017年 Adam. All rights reserved.
 //
 
 #import "LTPhotoController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
+#import  <Photos/Photos.h>
 
-@interface LTPhotoController ()
+@interface LTPhotoController ()<UIImagePickerControllerDelegate,UINavigationBarDelegate>
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextView *resultTextView;
@@ -21,15 +22,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor redColor];
+   
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    // Do any additional setup after loading the view.
+}
+-(void)viewDidAppear:(BOOL)animated
+{
     UIImagePickerController *ctrl = [[UIImagePickerController alloc] init];
     ctrl.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     ctrl.delegate = self;
-    
+    ctrl.view.backgroundColor = [UIColor yellowColor];
     [self presentViewController:ctrl animated:YES completion:nil];
-    // Do any additional setup after loading the view.
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -58,7 +63,15 @@
     [self presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 
-
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    
+}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 /*
 #pragma mark - Navigation
 
