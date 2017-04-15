@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LTPhotoController : UIViewController
+@interface LTPhotoController : UIViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @end
