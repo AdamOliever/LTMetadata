@@ -7,16 +7,24 @@
 //
 
 #import "mainWindow.h"
-
+#import "LTPhotoController.h"
 @interface mainWindow ()
-
+{
+    LTPhotoController *photoDetail;
+}
 @end
 
 @implementation mainWindow
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    photoDetail = [[LTPhotoController alloc]init];
+
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self presentViewController:photoDetail animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

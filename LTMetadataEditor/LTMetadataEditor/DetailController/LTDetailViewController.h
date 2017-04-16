@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface LTDetailViewController : UIViewController
-
+-(instancetype)initWithFrame:(CGRect)frame andImage:(UIImage*)image;
 @end

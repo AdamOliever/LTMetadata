@@ -13,6 +13,8 @@ static float statusBarHeight = 20;
     UITableView* metadataTable;
     UIImageView* currentImageView;
     UIImage    * currentImage;
+    UIView     * toolBarView;
+    UIButton   * backButton;
 }
 @end
 
@@ -22,7 +24,14 @@ static float statusBarHeight = 20;
     if(self = [super init])
     {
         currentImage = image;
+        toolBarView = [[UIView alloc]initWithFrame:[self getToolBarViewRect]];
+        toolBarView.backgroundColor = [UIColor grayColor];
+        backButton = [[UIButton alloc]initWithFrame:[self getBackButtonRect]];
+        UIImage* iconImage = [UIImage imageNamed:@"back_48px_1199464_easyicon.net.png"];
+        [backButton setImage:iconImage forState:UIControlStateNormal];
+        [toolBarView addSubview:backButton];
         currentImageView = [[UIImageView alloc]initWithFrame:[self getCurrentImageViewRect:currentImage]];
+        [currentImageView setImage:currentImage];
         self->metadataTable = [[UITableView alloc] initWithFrame:[self getMetadataTableRect:currentImageView] style:UITableViewStylePlain];
     }
     return self;
@@ -30,7 +39,10 @@ static float statusBarHeight = 20;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:currentImageView];
+    [self.view addSubview:metadataTable];
+    [self.view addSubview:toolBarView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -85,17 +97,32 @@ static float statusBarHeight = 20;
 -(CGRect)getCurrentImageViewRect:(UIImage*)image
 {
     float imageRatio      = image.size.height/image.size.width;
-    float imageViewY      = [UIScreen mainScreen].bounds.origin.y - statusBarHeight;
+    float imageViewY      = [UIScreen mainScreen].bounds.origin.y + statusBarHeight + toolBarView.frame.size.height;
     float imageViewWidth  = [UIScreen mainScreen].bounds.size.width / 4;
     float imageViewHeight = imageViewWidth * imageRatio;
     return  CGRectMake(0, imageViewY, imageViewWidth, imageViewHeight);
 }
 -(CGRect)getMetadataTableRect:(UIImageView*)imageView
 {
-    float tableViewY      = [UIScreen mainScreen].bounds.origin.y + statusBarHeight + imageView.frame.size.height;
+    float tableViewY      = [UIScreen mainScreen].bounds.origin.y + statusBarHeight + imageView.frame.size.height+5 + toolBarView.frame.size.height;
     float tableViewWidth  = [UIScreen mainScreen].bounds.size.width;
     float tableViewHeight = [UIScreen mainScreen].bounds.size.height - statusBarHeight - imageView.frame.size.height;
     return  CGRectMake(0, tableViewY, tableViewWidth, tableViewHeight);
+}
+
+-(CGRect)getBackButtonRect
+{
+    float BackButtonX = 5;
+    float BackButtony = 5;
+    
+    float BackButtonWidth = 48;
+    return CGRectMake(BackButtonX, BackButtony, BackButtonWidth, BackButtonWidth);
+}
+
+-(CGRect) getToolBarViewRect
+{
+    float toolBarViewWidth = [UIScreen mainScreen].bounds.size.width;
+    return CGRectMake(0, 0, toolBarViewWidth, 60);
 }
 - (void) setCurrentImage:(UIImage*)image
 {
@@ -106,4 +133,8 @@ static float statusBarHeight = 20;
     self-> currentImage = nil;//placeholder
 }
 
+-(BOOL)prefersStatusBarHidden
+{
+    return  YES;
+}
 @end

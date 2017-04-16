@@ -16,7 +16,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextView *resultTextView;
 @property (nonatomic,strong)UIImagePickerController *ctrl;
-@property (nonatomic,readwrite)BOOL isLoad ;
 @end
 
 @implementation LTPhotoController
@@ -24,22 +23,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.isLoad = YES;
+    self.ctrl = [[UIImagePickerController alloc] init];
+    self.ctrl.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    self.ctrl.delegate = self;
+    self.ctrl.view.backgroundColor = [UIColor yellowColor];
+    [self performSelector:@selector(presentViewController) withObject:self afterDelay:.1f];
     //[self dismissViewControllerAnimated:YES completion:nil];
     // Do any additional setup after loading the view.
 }
 
--(void)viewDidAppear:(BOOL)animated
+-(void)presentViewController
 {
-    if(self.isLoad)
-    {
-        self.ctrl = [[UIImagePickerController alloc] init];
-        self.ctrl.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        self.ctrl.delegate = self;
-        self.ctrl.view.backgroundColor = [UIColor yellowColor];
-        [self presentViewController:self.ctrl animated:YES completion:nil];
-    }
-    
+    [super presentViewController:self.ctrl animated:YES completion:nil];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -55,7 +50,8 @@
 
 #pragma mark - UIImagePickerControllerDelegate
 
-- (void)presentImagePicker {
+- (void)presentImagePicker
+{
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         NSLog(@"[%@ %@] : Not Allowed To Open Photo Library!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
         return;
@@ -71,19 +67,17 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    self.isLoad = NO;
     [self dismissViewControllerAnimated:NO completion:nil];
-    [self.ctrl dismissViewControllerAnimated:YES completion:nil];
+    //[self.ctrl dismissViewControllerAnimated:YES completion:nil];
     LTDetailViewController* detailController = [[LTDetailViewController alloc]initWithFrame:[UIScreen mainScreen].bounds andImage:[info valueForKey:UIImagePickerControllerOriginalImage]];
     [self presentViewController:detailController animated:YES completion:nil];
-    
-    
-    
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+
 /*
 #pragma mark - Navigation
 
