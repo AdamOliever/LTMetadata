@@ -10,11 +10,13 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import  <Photos/Photos.h>
-
+#import "LTDetailViewController.h"
 @interface LTPhotoController ()<UIImagePickerControllerDelegate,UINavigationBarDelegate>
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextView *resultTextView;
+@property (nonatomic,strong)UIImagePickerController *ctrl;
+@property (nonatomic,readwrite)BOOL isLoad ;
 @end
 
 @implementation LTPhotoController
@@ -22,18 +24,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
-   
+    self.isLoad = YES;
     //[self dismissViewControllerAnimated:YES completion:nil];
     // Do any additional setup after loading the view.
 }
+
 -(void)viewDidAppear:(BOOL)animated
 {
-    UIImagePickerController *ctrl = [[UIImagePickerController alloc] init];
-    ctrl.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    ctrl.delegate = self;
-    ctrl.view.backgroundColor = [UIColor yellowColor];
-    [self presentViewController:ctrl animated:YES completion:nil];
+    if(self.isLoad)
+    {
+        self.ctrl = [[UIImagePickerController alloc] init];
+        self.ctrl.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        self.ctrl.delegate = self;
+        self.ctrl.view.backgroundColor = [UIColor yellowColor];
+        [self presentViewController:self.ctrl animated:YES completion:nil];
+    }
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -65,11 +71,17 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    self.isLoad = NO;
+    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.ctrl dismissViewControllerAnimated:YES completion:nil];
+    LTDetailViewController* detailController = [[LTDetailViewController alloc]initWithFrame:[UIScreen mainScreen].bounds andImage:[info valueForKey:UIImagePickerControllerOriginalImage]];
+    [self presentViewController:detailController animated:YES completion:nil];
+    
     
     
 }
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 /*
